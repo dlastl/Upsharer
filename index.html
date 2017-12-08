@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title> Uploader </title>
+
+    <script type="text/javascript">
+    // The Browser API key obtained from the Google API Console.
+    // Replace with your own Browser API key, or your own key.
+    var developerKey = 'AIzaSyDXRHTu3IfsiauhEnBy_nH9wHk2SnmSWa0';
+
+    // The Client ID obtained from the Google API Console. Replace with your own Client ID.
+    var clientId = "409016728960-1em0s7a0sl7bqseb4ihdki30ctqnnlj0.apps.googleusercontent.com"
+    //var clientSecret = "YTe2d-9Nnq_HsA2pEuw8k6v9"
+    
+    // Replace with your own project number from console.developers.google.com.
+    // See "Project number" under "IAM & Admin" > "Settings"
+    var appId = "409016728960";
+
+    // Scope to use to access user's Drive items.
+    var scope = ['https://www.googleapis.com/auth/drive'];
+
+    var pickerApiLoaded = false;
+    var oauthToken;
+
+    // Use the Google API Loader script to load the google.picker script.
+    function loadPicker() {
+      gapi.load('auth', {'callback': onAuthApiLoad});
+      gapi.load('picker', {'callback': onPickerApiLoad});
+    }
+
+    function onAuthApiLoad() {
+      window.gapi.auth.authorize(
+          {
+            'client_id': clientId,
+            'scope': scope,
+            'immediate': false
+          },
+          handleAuthResult);
+    }
+
+    function onPickerApiLoad() {
+      pickerApiLoaded = true;
+      createPicker();
+    }
+
+    function handleAuthResult(authResult) {
+      if (authResult && !authResult.error) {
+        oauthToken = authResult.access_token;
+        createPicker();
+      }
+    }
+
+    // Create and render a Picker object for searching images.
+    function createPicker() {
+      if (pickerApiLoaded && oauthToken) {
+        var view = new google.picker.View(google.picker.ViewId.PDFS);
+        view.setMimeTypes("application/pdf");
+        var picker = new google.picker.PickerBuilder()
+            .enableFeature(google.picker.Feature.NAV_HIDDEN)
+            .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
+            .setAppId(appId)
+            .setOAuthToken(oauthToken)
+            .addView(view)
+            .addView(new google.picker.DocsUploadView())
+            .setDeveloperKey(developerKey)
+            .setCallback(pickerCallback)
+            .build();
+         picker.setVisible(true);
+      }
+    }
+     	 
+    // A simple callback implementation.
+    function pickerCallback(data) {
+      if (data.action == google.picker.Action.PICKED) {
+        var fileId = data.docs[0].id;
+        var Name = data.docs[0].name;
+        alert('The user selected: ' + fileId);
+        document.getElementById("a_t").value = oauthToken;
+        document.getElementById("f_id").value = fileId;
+        document.getElementById("name").value = Name;
+        document.getElementById("INT").submit();
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <!--<div id="result"></div>-->
+    <input id="Share from drive" type="button" value="Share from drive" onclick="loadPicker();" />
+	<!--<form action="http://localhost:3000/use_token" method="post" id=INT>-->
+	<form action="/use_token" method="post" id=INT>
+	<input type="hidden" id="a_t" name="oauthT">
+	<input type="hidden" id="f_id" name="fileID">
+	<input type="hidden" id="name" name="fileN">
+	</form>
+	
+	<form id="uploadForm" enctype="multipart/form-data" action="/upload" method="post">
+	<input type="file" id="file" name="file" />
+    <input type="submit" value="Upload">
+	</form>
+    <!-- The Google API Loader script. -->
+    <script type="text/javascript" src="https://apis.google.com/js/api.js?onload=loadPicker"></script>
+  </body>
+</html>

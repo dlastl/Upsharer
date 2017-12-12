@@ -20,7 +20,6 @@ app.get('/', function(req, res){
 });
 
 app.post('/use_token', function(req, res){
-	//var fileid = '1K7Fp2nklVhVc2YgekTKwjpjrXNjWnDNn'
 	var fileid = req.body.fileID;
 	var name = req.body.fileN;
 	a_t1 = req.body.oauthT;
@@ -62,8 +61,8 @@ app.post('/upload', function(req, res) {
 
 function buildClient() {
   var client = new google.auth.OAuth2(
-    '409016728960-1em0s7a0sl7bqseb4ihdki30ctqnnlj0.apps.googleusercontent.com',
-    'YTe2d-9Nnq_HsA2pEuw8k6v9',
+    'your client id',
+    'your client secret',
     //config.redirect_url
   );
   client.setCredentials({

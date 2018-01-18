@@ -2,7 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-    <title> Uploader </title>
+    <meta content='width=device-width, initial-scale=1' name='viewport'/>
+    <title> Notes Uploader </title>
 
     <script type="text/javascript">
     // The Browser API key obtained from the Google API Console.
@@ -10,7 +11,8 @@
     var developerKey = 'your developer key';
 
     // The Client ID obtained from the Google API Console. Replace with your own Client ID.
-    var clientId = 'your client id'
+    var clientId = "your client id"
+    //var clientSecret = "YTe2d-9Nnq_HsA2pEuw8k6v9"
     
     // Replace with your own project number from console.developers.google.com.
     // See "Project number" under "IAM & Admin" > "Settings"
@@ -74,7 +76,6 @@
       if (data.action == google.picker.Action.PICKED) {
         var fileId = data.docs[0].id;
         var Name = data.docs[0].name;
-        alert('The user selected: ' + fileId);
         document.getElementById("a_t").value = oauthToken;
         document.getElementById("f_id").value = fileId;
         document.getElementById("name").value = Name;
@@ -82,20 +83,20 @@
       }
     }
     </script>
-  </head>
-  <body>
-    <!--<div id="result"></div>-->
+    </head>
+    <body> 
+    <p><strong> Upsharer, share your notes: </p></strong>
+    </br>
     <input id="Share from drive" type="button" value="Share from drive" onclick="loadPicker();" />
-	<!--<form action="http://localhost:3000/use_token" method="post" id=INT>-->
 	<form action="/use_token" method="post" id=INT>
 	<input type="hidden" id="a_t" name="oauthT">
 	<input type="hidden" id="f_id" name="fileID">
 	<input type="hidden" id="name" name="fileN">
 	</form>
-	
+	</br></br>
 	<form id="uploadForm" enctype="multipart/form-data" action="/upload" method="post">
-	<input type="file" id="file" name="file" />
-    <input type="submit" value="Upload">
+	<input type="file" id="file" name="file">
+        <input type="submit" value="Upload">
 	</form>
     <!-- The Google API Loader script. -->
     <script type="text/javascript" src="https://apis.google.com/js/api.js?onload=loadPicker"></script>
